@@ -9,7 +9,7 @@ const lightPalette = {
   primary: '#FF00FF',
   secondary: '#00E0E0',
   bg: '#F0F0F0',
-  surface: '#676767',
+  surface: '#F0F0F0',
   text: '#002040',
   icon: '#676767',
 };
