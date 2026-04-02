@@ -1,0 +1,113 @@
+{
+    "quizzes": [
+        {
+            "id": 1,
+            "title": "Quizz 1",
+            "description": "",
+            "difficulty": "Facile"
+        },
+        {
+            "id": 2,
+            "title": "Quizz 2",
+            "description": "",
+            "difficulty": "Moyen"
+        },
+        {
+            "id": 3,
+            "title": "Quizz 3",
+            "description": "",
+            "difficulty": "Difficile"
+        }
+    ],
+
+    "questions": [
+        {
+            "id": 101,
+            "quizz_id": 1,
+            "question": "Quelle est la capitale de la France ?",
+            "options": ["Paris", "Londres", "Berlin", "Madrid"],
+            "answer": "Paris"
+        },
+        {
+            "id": 102,
+            "quizz_id": 1,
+            "question": "Quelle est la capitale de l'Espagne ?",
+            "options": ["Paris", "Londres", "Berlin", "Madrid"],
+            "answer": "Madrid"
+        },
+        {
+            "id": 103,
+            "quizz_id": 1,
+            "question": "Quelle est la capitale de l'Allemagne ?",
+            "options": ["Paris", "Londres", "Berlin", "Madrid"],
+            "answer": "Berlin"
+        },
+        {
+            "id": 104,
+            "quizz_id": 2,
+            "question": "Quel animal est connu comme le roi de la jungle ?",
+            "options": ["Lion", "Tigre", "Éléphant", "Girafe"],
+            "answer": "Lion"
+        },
+        {
+            "id": 105,
+            "quizz_id": 2,
+            "question": "Quel est le plus grand mammifère terrestre ?",
+            "options": ["Lion", "Tigre", "Éléphant", "Girafe"],
+            "answer": "Éléphant"
+        },
+        {
+            "id": 106,
+            "quizz_id": 2,
+            "question": "Quel est le plus grand animal marin ?",
+            "options": ["Baleine bleue", "Requin blanc", "Orque", "Dauphin"],
+            "answer": "Baleine bleue"
+        },
+        {
+            "id": 107,
+            "quizz_id": 3,
+            "question": "Quelle est la formule chimique de l'eau ?",
+            "options": ["H2O", "CO2", "O2", "NaCl"],
+            "answer": "H2O"
+        },
+        {
+            "id": 108,
+            "quizz_id": 3,
+            "question": "Quelle est la formule chimique du dioxyde de carbone ?",
+            "options": ["H2O", "CO2", "O2", "NaCl"],
+            "answer": "CO2"
+        },
+        {
+            "id": 109,
+            "quizz_id": 3,
+            "question": "Quelle est la formule chimique de l'oxygène ?",
+            "options": ["H2O", "CO2", "O2", "NaCl"],
+            "answer": "O2"
+        }
+    ],
+
+    "categories": [
+        { "id": 1, "name": "Géographie" },
+        { "id": 2, "name": "Animaux" },
+        { "id": 3, "name": "Sciences" }
+    ],
+
+    "relations": [
+        { "quizz_id": 1, "question_ids": [101, 102, 103], "category_ids": [1] },
+        { "quizz_id": 2, "question_ids": [104, 105, 106], "category_ids": [2] },
+        { "quizz_id": 3, "question_ids": [107, 108, 109], "category_ids": [3] }
+    ],
+
+    "utilisateurs": [
+        {
+            "id": 1,
+            "name": "Alice",
+            "mot_de_passe": "password123"
+        },
+        {
+            "id": 2,
+            "name": "Bob",
+            "mot_de_passe": "password456"
+        }
+    ]
+}

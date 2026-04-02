@@ -5,26 +5,61 @@
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+const lightPalette = {
+  primary: '#FF00FF',
+  secondary: '#00E0E0',
+  bg: '#F0F0F0',
+  surface: '#676767',
+  text: '#002040',
+  icon: '#676767',
+};
+
+const darkPalette = {
+  primary: '#B00B69',
+  secondary: '#690BB0',
+  bg: '#474951',
+  surface: '#696969',
+  text: '#F0F0F0',
+  icon: '#696969',
+};
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
-    tint: tintColorLight,
-    icon: '#687076',
-    tabIconDefault: '#687076',
-    tabIconSelected: tintColorLight,
+    primary: lightPalette.primary,
+    secondary: lightPalette.secondary,
+    bg: lightPalette.bg,
+    surface: lightPalette.surface,
+    text: lightPalette.text,
+
+    // Compatibility keys used by the starter components.
+    background: lightPalette.bg,
+    tint: lightPalette.primary,
+    icon: lightPalette.icon,
+    tabIconDefault: lightPalette.icon,
+    tabIconSelected: lightPalette.primary,
   },
   dark: {
-    text: '#ECEDEE',
-    background: '#151718',
-    tint: tintColorDark,
-    icon: '#9BA1A6',
-    tabIconDefault: '#9BA1A6',
-    tabIconSelected: tintColorDark,
+    primary: darkPalette.primary,
+    secondary: darkPalette.secondary,
+    bg: darkPalette.bg,
+    surface: darkPalette.surface,
+    text: darkPalette.text,
+
+    // Compatibility keys used by the starter components.
+    background: darkPalette.bg,
+    tint: darkPalette.primary,
+    icon: darkPalette.icon,
+    tabIconDefault: darkPalette.icon,
+    tabIconSelected: darkPalette.primary,
   },
+};
+
+export const UiTokens = {
+  transitionFast: '0.2s ease-in-out',
+  transitionDefault: '0.4s ease-in-out',
+  shadowDefault: '5px 5px 15px 5px rgba(0, 0, 0, 0.5)',
+  radiusDefault: 20,
+  radiusButton: 8,
 };
 
 export const Fonts = Platform.select({

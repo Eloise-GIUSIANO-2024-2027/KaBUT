@@ -1,0 +1,65 @@
+/* CSS Variables */
+:root {
+  /* Light theme */
+  /* Colors */
+  --l-primary-color: #FF00FF;
+  --l-secondary-color: #00E0E0;
+
+  /* Background */
+  --l-bg-color: linear-gradient(45deg,rgba(255, 0, 255, 1) 20%, rgba(0, 224, 224, 1) 80%);
+  --l-surface: #676767;
+
+  /* Text */
+  --l-text-primary: #002040;
+
+  /* Dark theme */
+  /* Colors */
+  --d-primary-color: #B00B69;
+  --d-secondary-color: #690BB0;
+
+  /* Background */
+  --d-bg-color: linear-gradient(45deg,rgba(176, 11, 105, 1) 20%, rgba(105, 11, 176, 1) 80%);
+  --d-surface: #696969;
+
+  /* Text */
+  --d-text-primary: #F0F0F0;
+
+  /* Transitions */
+  --transition-fast: 0.2s ease-in-out;
+  --transition-default: 0.4s ease-in-out;
+
+  /* Other */
+  --shadow-default: 5px 5px 15px 5px rgba(0, 0, 0, 0.5);
+  --radius-default: 20px;
+  --radius-button: 8px;
+}
+
+/* Basic classes */
+body {
+  font-family: system-ui;
+  background-color: var(--l-bg-color);
+  color: var(--l-text-primary);
+}
+
+body.dark-theme {
+  background-color: var(--d-bg-color);
+  color: var(--d-text-primary);
+}
+
+.container {
+  background: var(--l-surface);
+  box-shadow: var(--shadow-default);
+  border-radius: var(--radius-default);
+}
+
+button {
+  cursor: pointer;
+  background: var(--l-primary-color);
+  color: var(--l-text-primary);
+  font-size: 1.2em;
+  transition: background var(--transition-fast);
+}
+
+button:hover {
+  background: var(--l-secondary-color);
+}
