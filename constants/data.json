@@ -89,7 +89,8 @@
     "categories": [
         { "id": 1, "name": "Géographie" },
         { "id": 2, "name": "Animaux" },
-        { "id": 3, "name": "Sciences" }
+        { "id": 3, "name": "Sciences" },
+         { "id": 4, "name": "Histoire" }
     ],
 
     "relations": [
