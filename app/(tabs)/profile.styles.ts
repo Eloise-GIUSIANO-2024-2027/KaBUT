@@ -8,6 +8,10 @@ export const profileStyles = StyleSheet.create({
   page: {
     flex: 1,
   },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
@@ -70,6 +74,14 @@ export const profileStyles = StyleSheet.create({
     paddingHorizontal: 18,
     alignItems: 'center',
     marginTop: 4,
+  },
+  logoutButton: {
+    alignSelf: 'stretch',
+    borderRadius: UiTokens.radiusButton,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    alignItems: 'center',
+    marginTop: 8,
   },
   buttonText: {
     color: '#FFFFFF',
