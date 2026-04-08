@@ -1,20 +1,45 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Pressable, StyleSheet, View, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
 import { Colors, UiTokens } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 
-function randomScore() {
-  return Math.floor(Math.random() * 51) + 50;
+type QuizResultPayload = {
+  total: number;
+  correct: number;
+  answers: {
+    questionId: number;
+    question: string;
+    selectedAnswer: string;
+    correctAnswer: string;
+    isCorrect: boolean;
+  }[];
+};
+
+function parseResultPayload(value?: string | string[]): QuizResultPayload | null {
+  if (!value || Array.isArray(value)) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(value) as QuizResultPayload;
+  } catch {
+    return null;
+  }
 }
 
 export default function QuizPage() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ result?: string }>();
   const theme = useColorScheme() ?? 'light';
   const palette = Colors[theme];
-  const [score, setScore] = useState(78);
+  const result = useMemo(() => parseResultPayload(params.result), [params.result]);
+
+  const total = result?.total ?? 0;
+  const correct = result?.correct ?? 0;
+  const score = total > 0 ? Math.round((correct / total) * 100) : 0;
 
   const prefix = theme === 'dark' ? 'd' : 'l';
   const degrees = useMemo(() => Math.max(0, Math.min(100, score)) * 3.6, [score]);
@@ -38,13 +63,6 @@ export default function QuizPage() {
           backgroundColor: palette.surface,
         } as const);
 
-  const actionStyle =
-    Platform.OS === 'web'
-      ? ({
-          transition: 'transform var(--transition-fast), background-color var(--transition-fast)',
-        } as const)
-      : null;
-
   return (
     <View style={[styles.page, { backgroundColor: palette.bg }, webPageStyle]}>
       <View style={[styles.card, { backgroundColor: palette.surface }]}>
@@ -58,12 +76,25 @@ export default function QuizPage() {
           </View>
         </View>
 
-        <ThemedText style={[styles.helperText, { color: palette.text }]}>Retente ta chance harry</ThemedText>
+        <ThemedText style={[styles.helperText, { color: palette.text }]}>
+          {total > 0
+            ? `Tu as ${correct} bonne${correct > 1 ? 's' : ''} réponse${correct > 1 ? 's' : ''} sur ${total}.`
+            : 'Aucun résultat disponible. Lance un quiz pour voir ton score.'}
+        </ThemedText>
 
         <View style={styles.actions}>
           <Pressable
-            onPress={() => setScore(randomScore())}
-            style={[styles.button, { backgroundColor: palette.secondary }, actionStyle]}>
+            onPress={() =>
+              router.replace({
+                pathname: '/quiz' as never,
+                params: { refresh: Date.now().toString() },
+              })
+            }
+            style={[
+              styles.button,
+              { backgroundColor: palette.secondary },
+              Platform.OS === 'web' && styles.webButtonTransition,
+            ]}>
             <ThemedText type="defaultSemiBold" style={styles.buttonText}>
               Refaire
             </ThemedText>
@@ -71,7 +102,11 @@ export default function QuizPage() {
 
           <Pressable
             onPress={() => router.push('/explore')}
-            style={[styles.button, { backgroundColor: palette.primary }, actionStyle]}>
+            style={[
+              styles.button,
+              { backgroundColor: palette.primary },
+              Platform.OS === 'web' && styles.webButtonTransition,
+            ]}>
             <ThemedText type="defaultSemiBold" style={styles.buttonText}>
               Continuer
             </ThemedText>
@@ -136,6 +171,10 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontSize: 16,
+  },
+  webButtonTransition: {
+    transitionProperty: 'transform, background-color',
+    transitionDuration: '0.2s',
   },
 });
 
