@@ -41,6 +41,14 @@ export default function TabLayout() {
         name="quiz-result"
         options={{
           href: null,
+          title: 'Quiz Result',
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profil',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
         }}
       />
     </Tabs>
