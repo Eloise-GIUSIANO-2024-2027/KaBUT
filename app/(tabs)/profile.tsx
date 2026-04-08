@@ -1,8 +1,10 @@
-import { useMemo, useState } from 'react';
-import { Alert, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, Alert, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { Redirect, useRouter } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
 import { Colors } from '@/constants/theme';
+import { useCurrentUser } from '@/hooks/use-current-user';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import {
   getProfileInputBaseStyle,
@@ -17,12 +19,17 @@ function randomScore() {
 }
 
 export default function ProfilePage() {
+  const router = useRouter();
   const theme = useColorScheme() ?? 'light';
   const palette = Colors[theme];
+  const { currentUser, isLoading, logoutCurrentUser } = useCurrentUser();
 
   const [name, setName] = useState('Nom');
   const [isEditingName, setIsEditingName] = useState(false);
   const [draftName, setDraftName] = useState('Nom');
+  const [email, setEmail] = useState('Adresse mail');
+  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [draftEmail, setDraftEmail] = useState('Adresse mail');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -37,6 +44,20 @@ export default function ProfilePage() {
   const placeholderTextColor = getProfilePlaceholderColor(theme);
   const statBorderColor = getProfileStatBorderColor(theme);
 
+  useEffect(() => {
+    if (!currentUser) {
+      return;
+    }
+
+    const nextName = currentUser.name || 'Nom';
+    const nextEmail = currentUser.email || 'Adresse mail';
+
+    setName(nextName);
+    setDraftName(nextName);
+    setEmail(nextEmail);
+    setDraftEmail(nextEmail);
+  }, [currentUser]);
+
   const toggleNameEditing = () => {
     if (isEditingName) {
       const nextName = draftName.trim() || 'Nom';
@@ -48,6 +69,19 @@ export default function ProfilePage() {
 
     setDraftName(name);
     setIsEditingName(true);
+  };
+
+  const toggleEmailEditing = () => {
+    if (isEditingEmail) {
+      const nextEmail = draftEmail.trim() || 'Adresse mail';
+      setEmail(nextEmail);
+      setDraftEmail(nextEmail);
+      setIsEditingEmail(false);
+      return;
+    }
+
+    setDraftEmail(email);
+    setIsEditingEmail(true);
   };
 
   const handlePasswordValidation = () => {
@@ -66,6 +100,26 @@ export default function ProfilePage() {
     setNewPassword('');
     setConfirmPassword('');
   };
+
+  const handleLogout = async () => {
+    try {
+      await logoutCurrentUser();
+    } finally {
+      router.replace('/');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <View style={[profileStyles.page, profileStyles.loadingContainer, { backgroundColor: palette.bg }]}>
+        <ActivityIndicator size="large" color={palette.primary} />
+      </View>
+    );
+  }
+
+  if (!currentUser) {
+    return <Redirect href="/" />;
+  }
 
   return (
     <ScrollView
@@ -101,6 +155,39 @@ export default function ProfilePage() {
             ]}>
             <ThemedText type="defaultSemiBold" style={profileStyles.buttonText}>
               {isEditingName ? 'Enregistrer' : 'Modifier'}
+            </ThemedText>
+          </Pressable>
+        </View>
+
+        <View style={profileStyles.nameRow}>
+          {isEditingEmail ? (
+            <TextInput
+              value={draftEmail}
+              onChangeText={setDraftEmail}
+              placeholder="Adresse mail"
+              placeholderTextColor={placeholderTextColor}
+              style={[profileStyles.nameInput, inputBaseStyle]}
+              selectionColor={palette.primary}
+              returnKeyType="done"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+          ) : (
+            <ThemedText type="subtitle" style={[profileStyles.nameLabel, { color: palette.text }]}>
+              {email}
+            </ThemedText>
+          )}
+
+          <Pressable
+            onPress={toggleEmailEditing}
+            style={({ pressed }) => [
+              profileStyles.nameButton,
+              { backgroundColor: palette.primary },
+              pressed ? profileStyles.pressed : null,
+            ]}>
+            <ThemedText type="defaultSemiBold" style={profileStyles.buttonText}>
+              {isEditingEmail ? 'Enregistrer' : 'Modifier'}
             </ThemedText>
           </Pressable>
         </View>
@@ -179,6 +266,18 @@ export default function ProfilePage() {
             </View>
           ))}
         </View>
+
+        <Pressable
+          onPress={handleLogout}
+          style={({ pressed }) => [
+            profileStyles.logoutButton,
+            { backgroundColor: palette.primary },
+            pressed ? profileStyles.pressed : null,
+          ]}>
+          <ThemedText type="defaultSemiBold" style={profileStyles.buttonText}>
+            Déconnexion
+          </ThemedText>
+        </Pressable>
       </View>
     </ScrollView>
   );
