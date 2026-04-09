@@ -1,18 +1,12 @@
-export type AuthState = {
-  currentUser: User | null;
-};
-
 export type User = {
   id: string;
   email: string;
-  username: string;
-  avatarUrl?: string;
+  name: string;
 };
 
 export type StoredAccount = {
   id: string;
   email: string;
-  username: string;
+  name: string;
   password: string;
-  avatarUrl?: string;
 };
