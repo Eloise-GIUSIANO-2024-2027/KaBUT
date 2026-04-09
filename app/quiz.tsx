@@ -83,7 +83,13 @@ export default function QuizScreen() {
       answers: detail,
     };
 
-    router.push({ pathname: '/quiz-result', params: { result: JSON.stringify(payload) } });
+    router.push({
+      pathname: '/quiz-result',
+      params: {
+        result: JSON.stringify(payload),
+        quizId: quizIdNum ?? '',
+      },
+    });
   };
 
   return (
