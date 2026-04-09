@@ -18,7 +18,7 @@ const darkPalette = {
   primary: '#B00B69',
   secondary: '#690BB0',
   bg: '#474951',
-  surface: '#696969',
+  surface: '#2b2b2b',
   text: '#F0F0F0',
   icon: '#696969',
 };
