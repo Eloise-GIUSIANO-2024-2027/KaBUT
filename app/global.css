@@ -73,6 +73,13 @@ button:hover {
   align-items: center;
 }
 
+.profile-page-content {
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
 .profile-loading {
   min-height: 100dvh;
 }
@@ -85,6 +92,19 @@ button:hover {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.profile-title {
+  font-size: 32px;
+  line-height: 32px;
+  font-weight: 700;
+}
+
+.profile-information-section,
+.profile-stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .profile-name-row {
@@ -126,7 +146,23 @@ button:hover {
   gap: 8px;
 }
 
+.profile-info-label {
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.profile-name-label {
+  font-size: 18px;
+  line-height: 26px;
+  font-weight: 700;
+}
+
 .profile-field-label {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.profile-stat-label {
   font-size: 16px;
   line-height: 24px;
 }
@@ -155,6 +191,11 @@ button:hover {
   margin-top: 8px;
 }
 
+.profile-button-text {
+  color: #FFFFFF;
+  font-size: 16px;
+}
+
 .profile-button:active {
   opacity: 0.88;
   transform: scale(0.98);
@@ -173,4 +214,5 @@ button:hover {
 
 .profile-stat-score {
   font-size: 16px;
+  font-weight: 800;
 }
