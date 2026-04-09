@@ -102,11 +102,13 @@
         {
             "id": 1,
             "name": "Alice",
+            "email": "alice@gmail.com",
             "mot_de_passe": "password123"
         },
         {
             "id": 2,
             "name": "Bob",
+            "email": "bob@outlook.com",
             "mot_de_passe": "password456"
         }
     ]
