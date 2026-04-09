@@ -11,5 +11,5 @@ export default function Index() {
     if (!currentUser) {
         return <Redirect href="/onboarding" />;
     }
-    return <Redirect href="/(tabs)" />;
+    return <Redirect href="/(tabs)/profile" />;
 }
