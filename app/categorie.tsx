@@ -33,6 +33,7 @@ export default function CategorieScreen() {
                         key={quiz.id}
                         style={[styles.card, { borderColor: QUIZ_COLORS[i % QUIZ_COLORS.length] }]}
                         activeOpacity={0.75}
+                        onPress={() => router.push({ pathname: '/quiz', params: { quizId: quiz.id } })}
                     >
                         <Text style={[styles.cardText, { color: theme.text }]}>{quiz.title}</Text>
                         <Text style={[styles.cardDifficulty, { color: QUIZ_COLORS[i % QUIZ_COLORS.length] }]}>
@@ -46,29 +47,11 @@ export default function CategorieScreen() {
 }
 
 const styles = StyleSheet.create({
-    root: {
-        flex: 1,
-    },
-    content: {
-        padding: 20,
-        paddingBottom: 40,
-    },
-    title: {
-        fontSize: 22,
-        fontWeight: '700',
-        marginBottom: 6,
-    },
-    categoryName: {
-        fontSize: 15,
-        fontWeight: '500',
-        marginBottom: 20,
-        opacity: 0.7,
-    },
-    grid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 12,
-    },
+    root: { flex: 1 },
+    content: { padding: 20, paddingBottom: 40 },
+    title: { fontSize: 22, fontWeight: '700', marginBottom: 6 },
+    categoryName: { fontSize: 15, fontWeight: '500', marginBottom: 20, opacity: 0.7 },
+    grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
     card: {
         width: '46%',
         height: 90,
@@ -78,14 +61,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
     },
-    cardText: {
-        fontSize: 14,
-        fontWeight: '600',
-        textAlign: 'center',
-    },
-    cardDifficulty: {
-        fontSize: 11,
-        marginTop: 4,
-        fontWeight: '500',
-    },
+    cardText: { fontSize: 14, fontWeight: '600', textAlign: 'center' },
+    cardDifficulty: { fontSize: 11, marginTop: 4, fontWeight: '500' },
 });

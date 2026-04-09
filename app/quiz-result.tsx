@@ -101,7 +101,7 @@ export default function QuizPage() {
           </Pressable>
 
           <Pressable
-            onPress={() => router.push('/explore')}
+            onPress={() => router.push('/menu')}
             style={[
               styles.button,
               { backgroundColor: palette.primary },
