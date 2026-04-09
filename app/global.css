@@ -63,3 +63,114 @@ button {
 button:hover {
   background: var(--l-secondary-color);
 }
+
+/* Profile page (web) */
+.profile-page {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-loading {
+  min-height: 100dvh;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 640px;
+  border-radius: var(--radius-default);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.profile-name-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.profile-name-label {
+  flex: 1;
+}
+
+.profile-name-input,
+.profile-input {
+  min-height: 48px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: var(--radius-button);
+  padding: 0 14px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.profile-name-input {
+  flex: 1;
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profile-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-field-label {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.profile-button {
+  border-radius: var(--radius-button);
+  padding: 12px 18px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+}
+
+.profile-name-button {
+  min-width: 120px;
+}
+
+.profile-validate-button {
+  align-self: flex-start;
+  min-width: 140px;
+  margin-top: 4px;
+}
+
+.profile-logout-button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.profile-button:active {
+  opacity: 0.88;
+  transform: scale(0.98);
+}
+
+.profile-stat-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.profile-stat-score {
+  font-size: 16px;
+}

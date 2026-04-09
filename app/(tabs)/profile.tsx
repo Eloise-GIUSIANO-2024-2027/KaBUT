@@ -1,18 +1,111 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, Pressable, ScrollView, TextInput, View } from 'react-native';
+import { ActivityIndicator, Alert, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from 'react-native';
 import { Redirect, useRouter } from 'expo-router';
 
 import { ThemedText } from '@/components/themed-text';
 import { Colors } from '@/constants/theme';
-import { useCurrentUser } from '@/hooks/use-current-user';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import {
-  getProfileInputBaseStyle,
-  getProfilePlaceholderColor,
-  getProfileStatBorderColor,
-  getProfileWebPageStyle,
-  profileStyles,
-} from './profile.styles';
+import {useAuth} from "@/hooks/use-auth";
+
+const profileNativeStyles = StyleSheet.create({
+  page: {
+    flex: 1,
+  },
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  card: {
+    width: '100%',
+    maxWidth: 640,
+    borderRadius: 20,
+    padding: 24,
+    gap: 24,
+  },
+  nameRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  nameLabel: {
+    flex: 1,
+  },
+  nameInput: {
+    flex: 1,
+    minHeight: 48,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    fontSize: 16,
+  },
+  nameButton: {
+    minWidth: 120,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    alignItems: 'center',
+  },
+  section: {
+    gap: 12,
+  },
+  fieldGroup: {
+    gap: 8,
+  },
+  fieldLabel: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  input: {
+    minHeight: 48,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 14,
+    fontSize: 16,
+  },
+  validateButton: {
+    alignSelf: 'flex-start',
+    minWidth: 140,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  logoutButton: {
+    alignSelf: 'stretch',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+  statRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+  },
+  statScore: {
+    fontSize: 16,
+  },
+  pressed: {
+    opacity: 0.88,
+    transform: [{ scale: 0.98 }],
+  },
+});
 
 function randomScore() {
   return Math.floor(Math.random() * 101);
@@ -22,7 +115,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const theme = useColorScheme() ?? 'light';
   const palette = Colors[theme];
-  const { currentUser, isLoading, logoutCurrentUser } = useCurrentUser();
+  const { currentUser, isLoading, logout } = useAuth();
 
   const [name, setName] = useState('Nom');
   const [isEditingName, setIsEditingName] = useState(false);
@@ -39,10 +132,14 @@ export default function ProfilePage() {
     []
   );
 
-  const webPageStyle = getProfileWebPageStyle(theme);
-  const inputBaseStyle = getProfileInputBaseStyle(theme, palette.text);
-  const placeholderTextColor = getProfilePlaceholderColor(theme);
-  const statBorderColor = getProfileStatBorderColor(theme);
+  const webPageStyle = Platform.OS === 'web' ? { backgroundImage: `var(--${theme === 'dark' ? 'd' : 'l'}-bg-color)` } : null;
+  const inputBaseStyle = {
+    backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.06)' : '#FFFFFF',
+    borderColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(0, 32, 64, 0.14)',
+    color: palette.text,
+  } as const;
+  const placeholderTextColor = theme === 'dark' ? 'rgba(240, 240, 240, 0.55)' : 'rgba(0, 32, 64, 0.45)';
+  const statBorderColor = theme === 'dark' ? 'rgba(240, 240, 240, 0.12)' : 'rgba(0, 32, 64, 0.12)';
 
   useEffect(() => {
     if (!currentUser) {
@@ -103,7 +200,7 @@ export default function ProfilePage() {
 
   const handleLogout = async () => {
     try {
-      await logoutCurrentUser();
+      await logout();
     } finally {
       router.replace('/');
     }
@@ -111,7 +208,7 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <View style={[profileStyles.page, profileStyles.loadingContainer, { backgroundColor: palette.bg }]}>
+      <View style={[profileNativeStyles.page, profileNativeStyles.loadingContainer, { backgroundColor: palette.bg }]}>
         <ActivityIndicator size="large" color={palette.primary} />
       </View>
     );
@@ -123,25 +220,25 @@ export default function ProfilePage() {
 
   return (
     <ScrollView
-      contentContainerStyle={profileStyles.scrollContent}
+      contentContainerStyle={profileNativeStyles.scrollContent}
       keyboardShouldPersistTaps="handled"
-      style={[profileStyles.page, { backgroundColor: palette.bg }, webPageStyle]}>
-      <View style={[profileStyles.card, { backgroundColor: palette.surface }]}>
+      style={[profileNativeStyles.page, { backgroundColor: palette.bg }, webPageStyle]}>
+      <View style={[profileNativeStyles.card, { backgroundColor: palette.surface }]}>
         <ThemedText type="title">Page de Profil</ThemedText>
 
-        <View style={profileStyles.nameRow}>
+        <View style={profileNativeStyles.nameRow}>
           {isEditingName ? (
             <TextInput
               value={draftName}
               onChangeText={setDraftName}
               placeholder="Nom"
               placeholderTextColor={placeholderTextColor}
-              style={[profileStyles.nameInput, inputBaseStyle]}
+              style={[profileNativeStyles.nameInput, inputBaseStyle]}
               selectionColor={palette.primary}
               returnKeyType="done"
             />
           ) : (
-            <ThemedText type="subtitle" style={[profileStyles.nameLabel, { color: palette.text }]}>
+            <ThemedText type="subtitle" style={[profileNativeStyles.nameLabel, { color: palette.text }]}>
               {name}
             </ThemedText>
           )}
@@ -149,24 +246,24 @@ export default function ProfilePage() {
           <Pressable
             onPress={toggleNameEditing}
             style={({ pressed }) => [
-              profileStyles.nameButton,
+              profileNativeStyles.nameButton,
               { backgroundColor: palette.primary },
-              pressed ? profileStyles.pressed : null,
+              pressed ? profileNativeStyles.pressed : null,
             ]}>
-            <ThemedText type="defaultSemiBold" style={profileStyles.buttonText}>
+            <ThemedText type="defaultSemiBold" style={profileNativeStyles.buttonText}>
               {isEditingName ? 'Enregistrer' : 'Modifier'}
             </ThemedText>
           </Pressable>
         </View>
 
-        <View style={profileStyles.nameRow}>
+        <View style={profileNativeStyles.nameRow}>
           {isEditingEmail ? (
             <TextInput
               value={draftEmail}
               onChangeText={setDraftEmail}
               placeholder="Adresse mail"
               placeholderTextColor={placeholderTextColor}
-              style={[profileStyles.nameInput, inputBaseStyle]}
+              style={[profileNativeStyles.nameInput, inputBaseStyle]}
               selectionColor={palette.primary}
               returnKeyType="done"
               keyboardType="email-address"
@@ -174,7 +271,7 @@ export default function ProfilePage() {
               autoCorrect={false}
             />
           ) : (
-            <ThemedText type="subtitle" style={[profileStyles.nameLabel, { color: palette.text }]}>
+            <ThemedText type="subtitle" style={[profileNativeStyles.nameLabel, { color: palette.text }]}>
               {email}
             </ThemedText>
           )}
@@ -182,54 +279,54 @@ export default function ProfilePage() {
           <Pressable
             onPress={toggleEmailEditing}
             style={({ pressed }) => [
-              profileStyles.nameButton,
+              profileNativeStyles.nameButton,
               { backgroundColor: palette.primary },
-              pressed ? profileStyles.pressed : null,
+              pressed ? profileNativeStyles.pressed : null,
             ]}>
-            <ThemedText type="defaultSemiBold" style={profileStyles.buttonText}>
+            <ThemedText type="defaultSemiBold" style={profileNativeStyles.buttonText}>
               {isEditingEmail ? 'Enregistrer' : 'Modifier'}
             </ThemedText>
           </Pressable>
         </View>
 
-        <View style={profileStyles.section}>
+        <View style={profileNativeStyles.section}>
           <ThemedText type="subtitle">Changer mot de passe</ThemedText>
 
-          <View style={profileStyles.fieldGroup}>
-            <ThemedText style={profileStyles.fieldLabel}>Entrer l&apos;ancien mot de passe</ThemedText>
+          <View style={profileNativeStyles.fieldGroup}>
+            <ThemedText style={profileNativeStyles.fieldLabel}>Entrer l&apos;ancien mot de passe</ThemedText>
             <TextInput
               value={oldPassword}
               onChangeText={setOldPassword}
               secureTextEntry
               placeholder="Ancien mot de passe"
               placeholderTextColor={placeholderTextColor}
-              style={[profileStyles.input, inputBaseStyle]}
+              style={[profileNativeStyles.input, inputBaseStyle]}
               selectionColor={palette.primary}
             />
           </View>
 
-          <View style={profileStyles.fieldGroup}>
-            <ThemedText style={profileStyles.fieldLabel}>Entrer le nouveau mot de passe</ThemedText>
+          <View style={profileNativeStyles.fieldGroup}>
+            <ThemedText style={profileNativeStyles.fieldLabel}>Entrer le nouveau mot de passe</ThemedText>
             <TextInput
               value={newPassword}
               onChangeText={setNewPassword}
               secureTextEntry
               placeholder="Nouveau mot de passe"
               placeholderTextColor={placeholderTextColor}
-              style={[profileStyles.input, inputBaseStyle]}
+              style={[profileNativeStyles.input, inputBaseStyle]}
               selectionColor={palette.primary}
             />
           </View>
 
-          <View style={profileStyles.fieldGroup}>
-            <ThemedText style={profileStyles.fieldLabel}>Confirmer le nouveau mot de passe</ThemedText>
+          <View style={profileNativeStyles.fieldGroup}>
+            <ThemedText style={profileNativeStyles.fieldLabel}>Confirmer le nouveau mot de passe</ThemedText>
             <TextInput
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry
               placeholder="Confirmer le mot de passe"
               placeholderTextColor={placeholderTextColor}
-              style={[profileStyles.input, inputBaseStyle]}
+              style={[profileNativeStyles.input, inputBaseStyle]}
               selectionColor={palette.primary}
             />
           </View>
@@ -237,30 +334,30 @@ export default function ProfilePage() {
           <Pressable
             onPress={handlePasswordValidation}
             style={({ pressed }) => [
-              profileStyles.validateButton,
+              profileNativeStyles.validateButton,
               { backgroundColor: palette.secondary },
-              pressed ? profileStyles.pressed : null,
+              pressed ? profileNativeStyles.pressed : null,
             ]}>
-            <ThemedText type="defaultSemiBold" style={profileStyles.buttonText}>
+            <ThemedText type="defaultSemiBold" style={profileNativeStyles.buttonText}>
               Valider
             </ThemedText>
           </Pressable>
         </View>
 
-        <View style={profileStyles.section}>
+        <View style={profileNativeStyles.section}>
           <ThemedText type="subtitle">Statistique</ThemedText>
 
           {questionnaireScores.map((score, index) => (
             <View
               key={`questionnaire-${index + 1}`}
               style={[
-                profileStyles.statRow,
+                profileNativeStyles.statRow,
                 {
                   borderBottomColor: statBorderColor,
                 },
               ]}>
-              <ThemedText style={profileStyles.fieldLabel}>{`Questionnaire ${index + 1}`}</ThemedText>
-              <ThemedText type="defaultSemiBold" style={[profileStyles.statScore, { color: palette.primary }]}>
+              <ThemedText style={profileNativeStyles.fieldLabel}>{`Questionnaire ${index + 1}`}</ThemedText>
+              <ThemedText type="defaultSemiBold" style={[profileNativeStyles.statScore, { color: palette.primary }]}>
                 {score}%
               </ThemedText>
             </View>
@@ -270,11 +367,11 @@ export default function ProfilePage() {
         <Pressable
           onPress={handleLogout}
           style={({ pressed }) => [
-            profileStyles.logoutButton,
+            profileNativeStyles.logoutButton,
             { backgroundColor: palette.primary },
-            pressed ? profileStyles.pressed : null,
+            pressed ? profileNativeStyles.pressed : null,
           ]}>
-          <ThemedText type="defaultSemiBold" style={profileStyles.buttonText}>
+          <ThemedText type="defaultSemiBold" style={profileNativeStyles.buttonText}>
             Déconnexion
           </ThemedText>
         </Pressable>
