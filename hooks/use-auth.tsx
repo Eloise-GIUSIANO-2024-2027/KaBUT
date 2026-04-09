@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { User, StoredAccount } from '@/types/auth';
 import defaultData from '@/constants/data.json';
 import { router } from "expo-router";
+import { StoredAccount, User } from "@/types/auth";
 
 const ACCOUNTS_KEY = 'accounts';
 const CURRENT_USER_KEY = 'currentUser';
@@ -10,7 +10,7 @@ const CURRENT_USER_KEY = 'currentUser';
 type AuthContextType = {
   currentUser: User | null;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  signup: (email: string, password: string, username: string) => Promise<{ success: boolean; error?: string }>;
+  signup: (email: string, password: string, name: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   isLoading: boolean;
 };
@@ -26,7 +26,7 @@ async function initializeAccounts(): Promise<StoredAccount[]> {
   const initialAccounts: StoredAccount[] = defaultData.utilisateurs.map((u) => ({
     id: String(u.id),
     email: u.email,
-    username: u.name,
+    name: u.name,
     password: u.mot_de_passe,
   }));
 
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const user: User = {
       id: account.id,
       email: account.email,
-      username: account.username
+      name: account.name
     };
 
     await AsyncStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
@@ -85,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { success: true };
   }
 
-  async function signup(email: string, password: string, username: string): Promise<{ success: boolean; error?: string }> {
+  async function signup(email: string, password: string, name: string): Promise<{ success: boolean; error?: string }> {
     let accountsJson = await AsyncStorage.getItem(ACCOUNTS_KEY);
     let accounts: StoredAccount[] = accountsJson ? JSON.parse(accountsJson) : [];
     
@@ -101,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const newAccount: StoredAccount = {
       id: String(Date.now()),
       email,
-      username,
+      name: name,
       password,
     };
 
@@ -111,7 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const user: User = {
       id: newAccount.id,
       email: newAccount.email,
-      username: newAccount.username,
+      name: newAccount.name,
     };
 
     await AsyncStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
@@ -122,7 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function logout() {
     await AsyncStorage.removeItem(CURRENT_USER_KEY);
     setCurrentUser(null);
-    router.push('/');
+    router.push('/onboarding');
   }
 
   return (
